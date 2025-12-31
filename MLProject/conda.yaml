@@ -1,11 +1,7 @@
-name: mlflow-env
-channels:
-  - defaults
-dependencies:
-  - python=3.9
-  - pip
-  - pip:
-      - mlflow
-      - pandas
-      - scikit-learn
-      - numpy
+name: heart-disease-training
+
+conda_env: conda.yaml
+
+entry_points:
+  main:
+    command: "python modelling.py"

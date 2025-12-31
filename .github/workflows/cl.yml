@@ -1,4 +1,4 @@
-name: CI-MLflow
+name: MLflow CI Training
 
 on:
   push:
@@ -9,17 +9,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repo
-      uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v4
 
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v5
       with:
-        python-version: '3.9'
+        python-version: "3.10"
 
     - name: Install MLflow
       run: |
-        pip install mlflow
+        pip install mlflow pandas scikit-learn
 
     - name: Run MLflow Project
       run: |
