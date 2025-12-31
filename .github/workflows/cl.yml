@@ -1,26 +1,26 @@
-name: MLflow CI Training
+name: CI MLflow Project
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ main ]
 
 jobs:
-  train-model:
+  train:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
+    - name: Checkout repo
       uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
+    - name: Set up Miniconda
+      uses: conda-incubator/setup-miniconda@v3
       with:
-        python-version: "3.10"
-
-    - name: Install MLflow
-      run: |
-        pip install mlflow pandas scikit-learn
+        auto-update-conda: true
+        activate-environment: mlflow-env
+        environment-file: MLProject/conda.yaml
+        python-version: 3.9
 
     - name: Run MLflow Project
+      shell: bash -l {0}
       run: |
         mlflow run MLProject
