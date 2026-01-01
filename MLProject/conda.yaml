@@ -12,3 +12,7 @@ dependencies:
       - matplotlib
       - seaborn
       - dagshub
+
+      - name: Install mlflow
+         run: pip install mlflow
+
