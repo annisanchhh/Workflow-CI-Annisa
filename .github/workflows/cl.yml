@@ -9,30 +9,27 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repo
-      uses: actions/checkout@v4
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
-    - name: Setup Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.9'
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
 
-    - name: Install dependencies
-      run: |
-        pip install mlflow pandas scikit-learn matplotlib seaborn dagshub
+      - name: Install dependencies
+        run: |
+          pip install mlflow pandas scikit-learn matplotlib seaborn dagshub
 
-    - name: Setup DagsHub MLflow
-      env:
-        DAGSHUB_USER: ${{ secrets.DAGSHUB_USERNAME }}
-        DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_TOKEN }}
-      run: |
-- name: Set MLflow env
-  run: |
-    echo "MLFLOW_TRACKING_URI=https://dagshub.com/${{ secrets.DAGSHUB_USER }}/Workflow-CI-Annisa.mlflow" >> $GITHUB_ENV
-    echo "MLFLOW_TRACKING_USERNAME=${{ secrets.DAGSHUB_USER }}" >> $GITHUB_ENV
-    echo "MLFLOW_TRACKING_PASSWORD=${{ secrets.DAGSHUB_TOKEN }}" >> $GITHUB_ENV
+      - name: Set MLflow env
+        env:
+          DAGSHUB_USER: ${{ secrets.DAGSHUB_USERNAME }}
+          DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_TOKEN }}
+        run: |
+          echo "MLFLOW_TRACKING_URI=https://dagshub.com/${DAGSHUB_USER}/Workflow-CI-Annisa.mlflow" >> $GITHUB_ENV
+          echo "MLFLOW_TRACKING_USERNAME=${DAGSHUB_USER}" >> $GITHUB_ENV
+          echo "MLFLOW_TRACKING_PASSWORD=${DAGSHUB_TOKEN}" >> $GITHUB_ENV
 
-- name: Run training
-  run: |
-    python MLProject/modelling.py
-
+      - name: Run training
+        run: |
+          python MLProject/modelling.py
