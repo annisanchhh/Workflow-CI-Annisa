@@ -7,7 +7,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
 
+# ===============================
 # Ambil environment variable MLflow
+# ===============================
 MLFLOW_URI = os.getenv("MLFLOW_TRACKING_URI")
 MLFLOW_USER = os.getenv("MLFLOW_TRACKING_USERNAME")
 MLFLOW_PASSWORD = os.getenv("MLFLOW_TRACKING_PASSWORD")
@@ -18,21 +20,23 @@ print("MLFLOW_TRACKING_USERNAME:", MLFLOW_USER)
 print("MLFLOW_TRACKING_PASSWORD:", "******" if MLFLOW_PASSWORD else None)
 print("===================================")
 
+# ===============================
+# Setup MLflow tracking
+# ===============================
 if MLFLOW_URI:
     mlflow.set_tracking_uri(MLFLOW_URI)
+
     if MLFLOW_USER and MLFLOW_PASSWORD:
         os.environ["MLFLOW_TRACKING_USERNAME"] = MLFLOW_USER
         os.environ["MLFLOW_TRACKING_PASSWORD"] = MLFLOW_PASSWORD
+
     print("Using remote MLflow tracking")
 else:
-    print("Using local MLflow tracking")
+    print("Using local MLflow tracking (default)")
 
-
-mlflow.set_tracking_uri(MLFLOW_URI)
-os.environ["MLFLOW_TRACKING_USERNAME"] = MLFLOW_USER
-os.environ["MLFLOW_TRACKING_PASSWORD"] = MLFLOW_PASSWORD
-
+# ===============================
 # Dataset dummy
+# ===============================
 X, y = make_regression(
     n_samples=100,
     n_features=5,
@@ -50,6 +54,9 @@ X_train, X_test, y_train, y_test = train_test_split(
     random_state=42
 )
 
+# ===============================
+# Training & logging MLflow
+# ===============================
 with mlflow.start_run():
     model = LinearRegression()
     model.fit(X_train, y_train)
