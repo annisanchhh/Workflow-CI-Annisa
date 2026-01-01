@@ -31,5 +31,7 @@ jobs:
           echo "MLFLOW_TRACKING_USERNAME=${DAGSHUB_USER}" >> $GITHUB_ENV
           echo "MLFLOW_TRACKING_PASSWORD=${DAGSHUB_TOKEN}" >> $GITHUB_ENV
 
-      - name: Run MLflow Project
-        run: mlflow run MLProject -e main
+      - name: Run MLflow Project (criteria compliant)
+        run: |
+          cd MLProject
+          mlflow run . -e main --env-manager=local
