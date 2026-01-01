@@ -51,3 +51,6 @@ with mlflow.start_run():
     mlflow.sklearn.log_model(model, "model")
 
     print("Training done! Model logged to MLflow.")
+print("MLFLOW_TRACKING_URI:", os.getenv("MLFLOW_TRACKING_URI"))
+print("MLFLOW_TRACKING_USERNAME:", os.getenv("MLFLOW_TRACKING_USERNAME"))
+print("MLFLOW_TRACKING_PASSWORD:", "******" if os.getenv("MLFLOW_TRACKING_PASSWORD") else None)
