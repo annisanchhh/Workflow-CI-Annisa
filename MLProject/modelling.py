@@ -1,29 +1,53 @@
-import pandas as pd
+# MLProject/modelling.py
+
+import os
 import mlflow
-from sklearn.linear_model import LogisticRegression
+import mlflow.sklearn
+import pandas as pd
+from sklearn.datasets import make_regression
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error
 
-mlflow.start_run()
+# Ambil environment variable dari GitHub Actions
+MLFLOW_URI = os.getenv("MLFLOW_TRACKING_URI")
+MLFLOW_USER = os.getenv("MLFLOW_TRACKING_USERNAME")
+MLFLOW_PASSWORD = os.getenv("MLFLOW_TRACKING_PASSWORD")
 
-df = pd.read_csv("heart_preprocessing.csv")
+if not MLFLOW_URI or not MLFLOW_USER or not MLFLOW_PASSWORD:
+    raise ValueError("MLflow environment variables not set!")
 
-X = df.drop("target", axis=1)
-y = df["target"]
+# Set tracking URI
+mlflow.set_tracking_uri(MLFLOW_URI)
 
+# Kalau DagsHub, login menggunakan username/password
+os.environ["MLFLOW_TRACKING_USERNAME"] = MLFLOW_USER
+os.environ["MLFLOW_TRACKING_PASSWORD"] = MLFLOW_PASSWORD
+
+# Buat dataset dummy (bisa ganti dengan CSV kamu)
+X, y = make_regression(n_samples=100, n_features=5, noise=0.1, random_state=42)
+df = pd.DataFrame(X, columns=[f"feature_{i}" for i in range(X.shape[1])])
+df["target"] = y
+
+# Split train/test
 X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42
+    df.drop("target", axis=1), df["target"], test_size=0.2, random_state=42
 )
 
-model = LogisticRegression(max_iter=1000)
-model.fit(X_train, y_train)
+# Start MLflow run
+with mlflow.start_run():
+    # Buat model
+    model = LinearRegression()
+    model.fit(X_train, y_train)
 
-preds = model.predict(X_test)
-acc = accuracy_score(y_test, preds)
+    # Prediksi & evaluasi
+    y_pred = model.predict(X_test)
+    mse = mean_squared_error(y_test, y_pred)
+    print(f"Mean Squared Error: {mse}")
 
-mlflow.log_metric("accuracy", acc)
-mlflow.sklearn.log_model(model, "model")
+    # Log parameter, metric, model
+    mlflow.log_param("model_type", "LinearRegression")
+    mlflow.log_metric("mse", mse)
+    mlflow.sklearn.log_model(model, "model")
 
-print("Training selesai. Accuracy:", acc)
-
-mlflow.end_run()
+    print("Training done! Model logged to MLflow.")
