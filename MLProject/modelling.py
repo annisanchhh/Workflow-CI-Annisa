@@ -18,8 +18,15 @@ print("MLFLOW_TRACKING_USERNAME:", MLFLOW_USER)
 print("MLFLOW_TRACKING_PASSWORD:", "******" if MLFLOW_PASSWORD else None)
 print("===================================")
 
-if not MLFLOW_URI or not MLFLOW_USER or not MLFLOW_PASSWORD:
-    raise ValueError("MLflow environment variables not set!")
+if MLFLOW_URI:
+    mlflow.set_tracking_uri(MLFLOW_URI)
+    if MLFLOW_USER and MLFLOW_PASSWORD:
+        os.environ["MLFLOW_TRACKING_USERNAME"] = MLFLOW_USER
+        os.environ["MLFLOW_TRACKING_PASSWORD"] = MLFLOW_PASSWORD
+    print("Using remote MLflow tracking")
+else:
+    print("Using local MLflow tracking")
+
 
 mlflow.set_tracking_uri(MLFLOW_URI)
 os.environ["MLFLOW_TRACKING_USERNAME"] = MLFLOW_USER
