@@ -13,14 +13,14 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      # 2. Install Miniconda (agar mlflow run bisa pakai conda.yaml)
+      # 2. Setup Miniconda pakai conda.yaml di MLProject
       - name: Setup Miniconda
         uses: conda-incubator/setup-miniconda@v3
         with:
           python-version: 3.9
           auto-update-conda: true
           activate-environment: mlflow-env
-          environment-file: conda.yaml
+          environment-file: MLProject/conda.yaml   # <-- path diperbaiki
 
       # 3. Set MLflow environment
       - name: Set MLflow env
@@ -32,6 +32,6 @@ jobs:
           echo "MLFLOW_TRACKING_USERNAME=${DAGSHUB_USER}" >> $GITHUB_ENV
           echo "MLFLOW_TRACKING_PASSWORD=${DAGSHUB_TOKEN}" >> $GITHUB_ENV
 
-      # 4. Run MLflow Project
+      # 4. Run MLflow Project entry point
       - name: Run MLflow Project
-        run: mlflow run . -e main
+        run: mlflow run MLProject -e main   # <-- jalankan project dari folder MLProject
