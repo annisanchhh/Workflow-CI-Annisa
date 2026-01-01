@@ -2,27 +2,26 @@ name: MLflow CI Training
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   train:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout repo
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      # 2. Setup Miniconda pakai conda.yaml di MLProject
-      - name: Setup Miniconda
-        uses: conda-incubator/setup-miniconda@v3
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
-          python-version: 3.9
-          auto-update-conda: true
-          activate-environment: mlflow-env
-          environment-file: MLProject/conda.yaml   # <-- path diperbaiki
+          python-version: "3.9"
 
-      # 3. Set MLflow environment
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install mlflow pandas numpy scikit-learn matplotlib seaborn dagshub
+
       - name: Set MLflow env
         env:
           DAGSHUB_USER: ${{ secrets.DAGSHUB_USER }}
@@ -32,6 +31,5 @@ jobs:
           echo "MLFLOW_TRACKING_USERNAME=${DAGSHUB_USER}" >> $GITHUB_ENV
           echo "MLFLOW_TRACKING_PASSWORD=${DAGSHUB_TOKEN}" >> $GITHUB_ENV
 
-      # 4. Run MLflow Project entry point
       - name: Run MLflow Project
-        run: mlflow run MLProject -e main   # <-- jalankan project dari folder MLProject
+        run: mlflow run MLProject -e main
