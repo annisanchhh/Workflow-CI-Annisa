@@ -1,0 +1,2 @@
+Docker image belum dibuat.
+Tahap saat ini fokus pada integrasi CI dan MLflow Tracking menggunakan DagsHub.
