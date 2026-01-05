@@ -9,7 +9,7 @@ mlflow.set_tracking_uri("http://127.0.0.1:5000")
 # =====================
 # GANTI RUN_ID
 # =====================
-RUN_ID = "30c165101847412f9c6acd6907e5d7b4"
+RUN_ID = "06d952aab94c40d99388ad4abecc0e4c"
 
 model_uri = f"runs:/{RUN_ID}/model"
 model = mlflow.sklearn.load_model(model_uri)
