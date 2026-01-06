@@ -7,11 +7,6 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
 
 # =====================
-# SET EXPERIMENT
-# =====================
-mlflow.set_experiment("workflow-ci-annisa")
-
-# =====================
 # DATA
 # =====================
 X, y = make_regression(
@@ -32,7 +27,7 @@ X_train, X_test, y_train, y_test = train_test_split(
 )
 
 # =====================
-# TRAIN MODEL
+# TRAIN
 # =====================
 model = LinearRegression()
 model.fit(X_train, y_train)
@@ -41,9 +36,9 @@ predictions = model.predict(X_test)
 mse = mean_squared_error(y_test, predictions)
 
 # =====================
-# LOGGING (TANPA start_run)
+# LOGGING
 # =====================
 mlflow.log_metric("mse", mse)
 mlflow.sklearn.log_model(model, "model")
 
-print("Training selesai & model berhasil di-log ke MLflow")
+print("MLflow Project run selesai dengan sukses")
