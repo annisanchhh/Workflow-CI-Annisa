@@ -32,16 +32,18 @@ X_train, X_test, y_train, y_test = train_test_split(
 )
 
 # =====================
-# TRAIN & LOG MODEL
+# TRAIN MODEL
 # =====================
-with mlflow.start_run() as run:
-    model = LinearRegression()
-    model.fit(X_train, y_train)
+model = LinearRegression()
+model.fit(X_train, y_train)
 
-    predictions = model.predict(X_test)
-    mse = mean_squared_error(y_test, predictions)
+predictions = model.predict(X_test)
+mse = mean_squared_error(y_test, predictions)
 
-    mlflow.log_metric("mse", mse)
-    mlflow.sklearn.log_model(model, "model")
+# =====================
+# LOGGING (TANPA start_run)
+# =====================
+mlflow.log_metric("mse", mse)
+mlflow.sklearn.log_model(model, "model")
 
-    print("RUN_ID:", run.info.run_id)
+print("Training selesai & model berhasil di-log ke MLflow")
