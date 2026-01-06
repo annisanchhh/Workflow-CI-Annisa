@@ -7,9 +7,8 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
 
 # =====================
-# PAKSA LOCAL MLflow
+# SET EXPERIMENT
 # =====================
-mlflow.set_tracking_uri("http://127.0.0.1:5000")
 mlflow.set_experiment("workflow-ci-annisa")
 
 # =====================
@@ -33,13 +32,15 @@ X_train, X_test, y_train, y_test = train_test_split(
 )
 
 # =====================
-# TRAIN & LOG
+# TRAIN & LOG MODEL
 # =====================
 with mlflow.start_run() as run:
     model = LinearRegression()
     model.fit(X_train, y_train)
 
-    mse = mean_squared_error(y_test, model.predict(X_test))
+    predictions = model.predict(X_test)
+    mse = mean_squared_error(y_test, predictions)
+
     mlflow.log_metric("mse", mse)
     mlflow.sklearn.log_model(model, "model")
 
